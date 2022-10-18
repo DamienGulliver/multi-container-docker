@@ -9,9 +9,14 @@ before_install:
 script:
   - docker run -e CI=true damiengulliver/react-test npm test
 
-
 after_success:
   - docker build -t damiengulliver/multi-client ./client
   - docker build -t damiengulliver/multi-nginx ./nginx
   - docker build -t damiengulliver/multi-server ./server
   - docker build -t damiengulliver/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push damiengulliver/multi-client
+  - docker push damiengulliver/multi-nginx
+  - docker push damiengulliver/multi-server
+  - docker push damiengulliver/multi-worker
+
